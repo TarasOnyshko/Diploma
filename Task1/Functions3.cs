@@ -90,6 +90,36 @@ namespace Task1
 
             return result;
         }
+
+
+        public static double G2i(double[] x, int i)
+        {
+            if (i == 0)
+            {
+                return Math.Abs(x[1] - x[2] * x[2]);
+            }
+            else if (i == 1)
+            {
+                return Math.Abs(3.0 * x[1] * x[1] - x[2] * x[2] + 1.0);
+            }
+
+
+            //else if (i == 3)
+            //{
+            //    return Math.Abs(2 * x[1] - x[3]);
+            //}
+            //else if (i == 4)
+            //{
+            //    return Math.Abs(3 + x[2] * x[2] - x[4]);
+            //}
+
+
+            else
+            {
+                return Math.Abs(x[0] + x[2] - x[1]);
+            }
+        }
+
         public static double[,] DF2(double[] x)
         {
             int n = x.Length;
@@ -150,33 +180,6 @@ namespace Task1
                 return 6.0 * x[0] * Math.Pow(x[1], 3.0) + Math.Pow(x[1], 2.0) * Math.Pow(x[2], 2.0) - x[0] * Math.Pow(x[1], 2.0) * x[2];
             }
             
-        }
-        public static double G2i(double[] x, int i)
-        {
-            if (i == 0)
-            {
-                return Math.Abs(x[1] - x[2] * x[2]);
-            }
-            else if (i == 1)
-            {
-                return Math.Abs(3.0 * x[1] * x[1] - x[2] * x[2] + 1.0);
-            }
-
-
-            //else if (i == 3)
-            //{
-            //    return Math.Abs(2 * x[1] - x[3]);
-            //}
-            //else if (i == 4)
-            //{
-            //    return Math.Abs(3 + x[2] * x[2] - x[4]);
-            //}
-
-
-            else
-            {
-                return Math.Abs(x[0] + x[2] - x[1]);
-            }
         }
     }
 }

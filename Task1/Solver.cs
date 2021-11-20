@@ -275,7 +275,7 @@ namespace Task1
             while (xk.Substract(xkPrevious).Norm() > eps);
 
 
-            return (xk, i, f(xk).Add(g(xk)).Norm());
+            return (xk, i, f(xk).Norm());
         }
 
         public static (double[], int, double) DecompositionPotra(double[] x0, double[] x1, double[] x2, Function f, Function g, Function_i fi, Function_i gi, double eps)
