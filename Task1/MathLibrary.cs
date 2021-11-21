@@ -9,20 +9,21 @@ namespace Task1
 {
     public static class MathLibrary
     {
-        //public static double[] Substract(this double[] x_k, double[] x_kk)
-        //{
-        //    var result = new double[x_k.Length];
-        //    for (int i = 0; i < x_k.Length; i++)
-        //    {
-        //        result[i] = x_k[i] - x_kk[i];
-        //    }
-
-        //    //Parallel.For(0, x_k.Length, count => {
-        //    //        result[count] = x_k[count] - x_kk[count];  
-        //    //});
-        //    return result;
-        //}
         public static double[] Substract(this double[] x_k, double[] x_kk)
+        {
+            var result = new double[x_k.Length];
+            for (int i = 0; i < x_k.Length; i++)
+            {
+                result[i] = x_k[i] - x_kk[i];
+            }
+
+            //Parallel.For(0, x_k.Length, count => {
+            //        result[count] = x_k[count] - x_kk[count];  
+            //});
+            return result;
+        }
+
+        public static double[] SubstractParallel(this double[] x_k, double[] x_kk)
         {
             var result = new double[x_k.Length];
 
@@ -31,6 +32,7 @@ namespace Task1
             {
                 result[count] = x_k[count] - x_kk[count];
             });
+
             return result;
         }
 
@@ -117,6 +119,26 @@ namespace Task1
             return addition;
         }
 
+        public static double[,] AddParallel(this double[,] matrix1, double[,] matrix2)
+        {
+            var matrixRows = matrix1.GetLength(0);
+            var matrixCols = matrix1.GetLength(1);
+
+            double[,] addition = new double[matrixRows, matrixCols];
+
+            Parallel.For(0, matrixRows, i =>
+            {
+                Parallel.For(0, matrixCols, j =>
+                {
+                    addition[i, j] = matrix1[i, j] + matrix2[i, j];
+                });
+            });
+
+            return addition;
+        }
+
+
+
         public static double[] Add(this double[] vector1, double[] vector2)
         {
             double[] addition = new double[vector1.Length];
@@ -128,6 +150,18 @@ namespace Task1
             //Parallel.For(1, vector1.Length, count => {
             //    addition[count] = vector1[count] + vector2[count];
             //});
+            return addition;
+        }
+
+        public static double[] AddParallel(this double[] vector1, double[] vector2)
+        {
+            double[] addition = new double[vector1.Length];
+
+            Parallel.For(0, vector1.Length, count =>
+            {
+                addition[count] = vector1[count] + vector2[count];
+            });
+
             return addition;
         }
 

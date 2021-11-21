@@ -252,8 +252,10 @@ namespace Task1
                 }
 
                 //LU
-                var LUData = LU.ParallelLU(Ak);
-                var delta_x = LU.ParallelSolve(LUData.L, LUData.U, Hx);
+                //var LUData = LU.ParallelLU(Ak);
+                //var delta_x = LU.ParallelSolve(LUData.L, LUData.U, Hx);
+                var LUData = LU.SequentialLU(Ak);
+                var delta_x = LU.Solve(LUData.L, LUData.U, Hx);
 
                 xk = xk.Add(delta_x);
 
@@ -265,6 +267,66 @@ namespace Task1
                 //xk = xk.Substract(fg_inv.Multiply(f(xk).Add(g(xk))));
                 xk2 = (double[])xk1.Clone();
                 xk1 = (double[])xkPrevious.Clone();
+                //Console.WriteLine("Iteration : " + i);
+                //Console.WriteLine(xk[0] + ", " + xk[1] + "," + xk[2]);
+
+                //Console.WriteLine("F(xk) : " + Hx[0] + "," + Hx[1] + "," + Hx[2]);
+
+                i++;
+            }
+            while (xk.Substract(xkPrevious).Norm() > eps);
+
+
+            return (xk, i, f(xk).Norm());
+        }
+
+        public static (double[], int, double) DecompositionNewtonHordsParallel(double[] x0, double[] x1, double[] x2, Function f, DerivativeFunction df, Function_i gi, double eps)
+        {
+            int n = x0.Length;
+
+
+            double[] xk2 = x2;
+            double[] xk1 = x1;
+            double[] xk = x0;
+
+            double[] xkPrevious = new double[n];
+            var Ak = new double[n, n];
+            var Hx = new double[n];
+            int i = 0;
+            do
+            {
+                xkPrevious = (double[])xk.Clone();
+                //Ak = df(xk).Add(Fxy(gi, xk, xk1)).Add(Fxy(gi, xk2, xk)).Substract(Fxy(gi,xk2, xk1));
+
+
+                // Ak = F`(xk) + G(x^(k-1), x^k)
+                Ak = df(xk).AddParallel(FxyParallel(gi, xk, xk1));
+
+                // H = F(x) + G(x)
+                Hx = f(xk);
+
+                Parallel.For(0, Hx.Length, j =>
+                {
+                    Hx[j] *= -1;
+                });
+
+
+
+                //LU
+                var LUData = LU.ParallelLU(Ak);
+                var delta_x = LU.ParallelSolve(LUData.L, LUData.U, Hx);
+
+                xk = xk.AddParallel(delta_x);
+
+
+
+                //xk = xk.Substract(Ak.Inverse().Multiply(f(xk).Add(g(xk))));
+
+                //var fg_inv = (df(xk).Add(Fxy(gi, xk2, xk1)).Inverse());
+                
+                //xk = xk.Substract(fg_inv.Multiply(f(xk).Add(g(xk))));
+                xk2 = (double[])xk1.Clone();
+                xk1 = (double[])xkPrevious.Clone();
                 Console.WriteLine("Iteration : " + i);
                 Console.WriteLine(xk[0] + ", " + xk[1] + "," + xk[2]);
 
@@ -272,7 +334,7 @@ namespace Task1
 
                 i++;
             }
-            while (xk.Substract(xkPrevious).Norm() > eps);
+            while (xk.SubstractParallel(xkPrevious).Norm() > eps);
 
 
             return (xk, i, f(xk).Norm());
@@ -302,7 +364,7 @@ namespace Task1
             return (xk, i, f(xk).Add(g(xk)).Norm());
         }
 
-        // devided dif
+        // поділені різниці
         private static double[,] Fxy(Function_i fi, double[] x, double[] y)
         {
             var n = x.Length;
@@ -328,6 +390,41 @@ namespace Task1
                 {
                     result[i, j] = (fi(xModified, i) - fi(yModified, i)) / (x[j] - y[j]);
                 }
+            }
+
+            return result;
+        }
+
+        // поділені різниці
+        private static double[,] FxyParallel(Function_i fi, double[] x, double[] y)
+        {
+            var n = x.Length;
+            var result = new double[n, n];
+
+            // якщо розпаралелити, то ламаються обчислення
+            for (int j = 0; j < n; j++)
+            {
+                var xModified = new double[x.Length];
+
+                Parallel.For(0, j+1, i =>
+                {
+                    xModified[i] = x[i];
+                });
+
+                Parallel.For(j + 1, x.Length, i =>
+                {
+                    xModified[i] = y[i];
+                });
+
+
+                var yModified = (double[])xModified.Clone();
+                yModified[j] = y[j];
+
+                Parallel.For(0, n, i =>
+                {
+                    result[i, j] = (fi(xModified, i) - fi(yModified, i)) / (x[j] - y[j]);
+                });
+
             }
 
             return result;

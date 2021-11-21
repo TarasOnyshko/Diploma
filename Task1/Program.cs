@@ -142,9 +142,9 @@ namespace Task1
         public static void Three_3()
         {
             //var x0 = new double[3] { -1.5, 2.5, 4.0 };
-            double[] x0 = Initialization.Initialize(20, -1.0);
-            var x1 = new double[20];
-            var x2 = new double[20];
+            double[] x0 = Initialization.Initialize(50, -1.0);
+            var x1 = new double[50];
+            var x2 = new double[50];
             
 
             for (int i = 0; i < x0.Length; i++)
@@ -152,8 +152,11 @@ namespace Task1
                 x1[i] += 0.0001;
                 x2[i] += 0.0002;
             }
+
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            var (result, iterations, norm) = Solver.DecompositionNewtonHords(x0, x1, x2, Functions.F, Functions.DF, Functions.Gi, eps);
+            //var (result, iterations, norm) = Solver.DecompositionNewtonHords(x0, x1, x2, Functions.F, Functions.DF, Functions.Gi, eps);
+
+            var (result, iterations, norm) = Solver.DecompositionNewtonHordsParallel(x0, x1, x2, Functions.F, Functions.DF, Functions.Gi, eps);
 
             //var (result, iterations, norm) = Solver.DecompositionNewtonHords(x0, x1, x2, Functions3.F2, Functions3.G2, Functions3.DF2, Functions3.G2i, eps);
             //watch.Stop();
