@@ -327,10 +327,10 @@ namespace Task1
                 //xk = xk.Substract(fg_inv.Multiply(f(xk).Add(g(xk))));
                 xk2 = (double[])xk1.Clone();
                 xk1 = (double[])xkPrevious.Clone();
-                Console.WriteLine("Iteration : " + i);
-                Console.WriteLine(xk[0] + ", " + xk[1] + "," + xk[2]);
+                //Console.WriteLine("Iteration : " + i);
+                //Console.WriteLine(xk[0] + ", " + xk[1] + "," + xk[2]);
 
-                Console.WriteLine("F(xk) : " + Hx[0] + "," + Hx[1] + "," + Hx[2]);
+                //Console.WriteLine("F(xk) : " + Hx[0] + "," + Hx[1] + "," + Hx[2]);
 
                 i++;
             }

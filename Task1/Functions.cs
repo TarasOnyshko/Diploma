@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Task1
 {
@@ -65,6 +66,47 @@ namespace Task1
                 return Math.Abs(x[n - 1] - x[n - 2]);
             }
 
+        }
+
+        public static double[] F_Parallel(double[] x)
+        {
+            int n = x.Length;
+
+            double[] f = new double[n];
+
+            f[0] = x[0] * (3 - 2 * x[0]) - 2 * x[1] + 1 + Math.Abs(x[0] - x[1]);
+
+            Parallel.For(1, n - 1, i =>
+            {
+                f[i] = x[i] * (3 - 2 * x[0]) - x[i - 1] - 2 * x[i + 1] + 1 + Math.Abs(x[i] - x[i + 1] - x[i - 1]);
+            });
+
+
+            f[n - 1] = x[n - 1] * (3 - 2 * x[n - 1]) - x[n - 2] + 1 + Math.Abs(x[n - 1] - x[n - 2]);
+
+            return f;
+        }
+
+        public static double[,] DF_Parallel(double[] x)
+        {
+            int n = x.Length;
+
+            double[,] df = new double[n, n];
+
+            df[0, 0] = 3.0 - 4.0 * x[0];
+            df[0, 1] = -2.0;
+
+            Parallel.For(1, n - 1, i =>
+            {
+                df[i, i - 1] = (-1.0);
+                df[i, i] = 3.0 - 4.0 * x[i];
+                df[i, i + 1] = -2.0;
+            });
+
+            df[n - 1, n - 1] = 3.0 - 4 * x[n - 1];
+            df[n - 1, n - 2] = -1.0;
+
+            return df;
         }
 
 

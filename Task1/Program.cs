@@ -142,26 +142,31 @@ namespace Task1
         public static void Three_3()
         {
             //var x0 = new double[3] { -1.5, 2.5, 4.0 };
-            double[] x0 = Initialization.Initialize(50, -1.0);
-            var x1 = new double[50];
-            var x2 = new double[50];
+            double[] x0 = Initialization.InitializeParallel(3, -1.0);
+            var x1 = new double[3];
+            var x2 = new double[3];
             
 
             for (int i = 0; i < x0.Length; i++)
             {
-                x1[i] += 0.0001;
-                x2[i] += 0.0002;
+                x1[i] += 0.00001;
+                x2[i] += 0.00002;
             }
 
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            //var (result, iterations, norm) = Solver.DecompositionNewtonHords(x0, x1, x2, Functions.F, Functions.DF, Functions.Gi, eps);
 
-            var (result, iterations, norm) = Solver.DecompositionNewtonHordsParallel(x0, x1, x2, Functions.F, Functions.DF, Functions.Gi, eps);
 
+
+            var (result, iterations, norm) = Solver.DecompositionNewtonHords(x0, x1, x2, Functions.F, Functions.DF, Functions.Gi, eps);
+            //var (result, iterations, norm) = Solver.DecompositionNewtonHordsParallel(x0, x1, x2, Functions.F_Parallel, Functions.DF_Parallel, Functions.Gi, eps);
+
+            
+            
+            
             //var (result, iterations, norm) = Solver.DecompositionNewtonHords(x0, x1, x2, Functions3.F2, Functions3.G2, Functions3.DF2, Functions3.G2i, eps);
             //watch.Stop();
             //Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
-            Console.WriteLine("(3.1) Decomposition Newton-Hords:");
+            Console.WriteLine("Decomposition Newton-Hords:");
             OperationsIO.DisplayResultsWithMoreDigits(result, iterations, norm);
 
             //(result, iterations, norm) = Solver.DecompositionPotra(x0, x1, x2, Functions3.F2, Functions3.G2, Functions3.F2i, Functions3.G2i, eps);

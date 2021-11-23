@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Task1
 {
@@ -33,6 +34,16 @@ namespace Task1
             {
                 result[i] = value;
             }
+            return result;
+        }
+
+        public static double[] InitializeParallel(int n, double value)
+        {
+            var result = new double[n];
+            Parallel.For(0, n, i =>
+            {
+                result[i] = value;
+            });
             return result;
         }
     }
